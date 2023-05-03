@@ -1,7 +1,3 @@
-import { utilService } from "./util.service.js"
-
-const STORAGE_KEY = 'locationDB'
-
 export const storageService = {
     post,   // Create
     get,    // Read
@@ -10,40 +6,53 @@ export const storageService = {
     query,  // List 
 }
 
-
-function query() {
-    // return locations
-    var locations = utilService.loadFromStorage(STORAGE_KEY) || []
-    return Promise.resolve(locations)
+function query(entityType, delay = 500) {
+    var entities = JSON.parse(localStorage.getItem(entityType)) || []
+    return new Promise((resolve) => {
+        setTimeout(() => resolve(entities), delay)})
 }
 
-function remove(locationId) {
-    // remove from local storage
-    return query().then(locations => {
-        const idx = locations.findIndex(location => location.id === locationId)
-        if (idx < 0) throw new Error(`Remove failed, cannot find entity with id: ${locationId} in: locations`)
-        locations.splice(idx, 1)
-        _save(locations)
+function get(entityType, entityId) {
+    return query(entityType).then(entities => {
+        const entity = entities.find(entity => entity.id === entityId)
+        if (!entity) throw new Error(`Get failed, cannot find entity with id: ${entityId} in: ${entityType}`)
+        return entity
     })
 }
 
-function post() {
-    //
+function post(entityType, newEntity) {
+    newEntity = JSON.parse(JSON.stringify(newEntity))    
+    newEntity.id = _makeId()
+    return query(entityType).then(entities => {
+        entities.push(newEntity)
+        _save(entityType, entities)
+        return newEntity
+    })
 }
 
-function get() {
-
+function put(entityType, updatedEntity) {
+    updatedEntity = JSON.parse(JSON.stringify(updatedEntity))    
+    return query(entityType).then(entities => {
+        const idx = entities.findIndex(entity => entity.id === updatedEntity.id)
+        if (idx < 0) throw new Error(`Update failed, cannot find entity with id: ${entityId} in: ${entityType}`)
+        entities.splice(idx, 1, updatedEntity)
+        _save(entityType, entities)
+        return updatedEntity
+    })
 }
 
-function put() {
-
+function remove(entityType, entityId) {
+    return query(entityType).then(entities => {
+        const idx = entities.findIndex(entity => entity.id === entityId)
+        if (idx < 0) throw new Error(`Remove failed, cannot find entity with id: ${entityId} in: ${entityType}`)
+        entities.splice(idx, 1)
+        _save(entityType, entities)
+    })
 }
-
-
 
 // Private functions
-function _save(locations) {
-    utilService.saveToStorage(STORAGE_KEY, locations)
+function _save(entityType, entities) {
+    localStorage.setItem(entityType, JSON.stringify(entities))
 }
 
 function _makeId(length = 5) {
