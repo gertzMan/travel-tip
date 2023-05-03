@@ -1,4 +1,4 @@
-import { utilService } from "./util.service"
+import { utilService } from "./util.service.js"
 
 const STORAGE_KEY = 'locationDB'
 
@@ -13,6 +13,8 @@ export const storageService = {
 
 function query() {
     // return locations
+    var locations = utilService.loadFromStorage(STORAGE_KEY) || []
+    return Promise.resolve(locations)
 }
 
 function remove(locationId) {
