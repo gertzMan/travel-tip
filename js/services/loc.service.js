@@ -27,7 +27,12 @@ function saveLocation(location) {
   if (location.id) {
     return storageService.put(STORAGE_KEY, location)
   } else {
-    location = _createLocation(location.name, location.lat, location.lng)
+    location = _createLocation(
+      location.name,
+      location.lat,
+      location.lng,
+      location.weather
+    )
     return storageService.post(STORAGE_KEY, location)
   }
 }
@@ -40,13 +45,14 @@ function removeLocation(locationId) {
 // {id, name, lat, lng, weather, createdAt, updatedAt}
 
 // private create location
-function _createLocation(name, lat, lng) {
+function _createLocation(name, lat, lng, weather) {
   const location = {}
   location.name = name
   location.lat = lat
   location.lng = lng
   location.createdAt = Date.now()
   location.updatedAt = Date.now()
+  location.weather = weather
   return location
 }
 
@@ -124,7 +130,7 @@ function getLocationData(locationString) {
           main,
           description,
           temperature,
-          icon,
+          icon: `https://openweathermap.org/img/wn/${icon}@2x.png`,
         },
         createdAt,
       }

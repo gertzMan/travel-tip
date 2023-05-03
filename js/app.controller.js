@@ -88,9 +88,10 @@ function onSearchLoc() {
   // let coord = locService
   //   .getLocationCoords(txt)
   //   .then((res) => getWeather(res.lat,res.lng)).then(res=>)
-  locService
-    .getLocationData(txt)
-    .then((location) => locService.saveLocation(location))
+  locService.getLocationData(txt).then((location) => {
+    locService.saveLocation(location)
+    renderWeather(location.weather)
+  })
 }
 
 //TODO: complete
@@ -122,4 +123,14 @@ function showTable() {
 
 function isTableHidden() {
   return document.querySelector('.table-container').classList.contains('hidden')
+}
+
+function renderWeather({ main, description, temperature, icon }) {
+  const strHTML = `
+  <div class="main">${main}</div>
+  <div class="desc">${description}</div>
+  <div class="temp">${temperature}</div>
+  <img src="${icon}" alt="">
+`
+  document.querySelector('.weather-container').innerHTML = strHTML
 }
