@@ -1,34 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/main.css">
     <title>TravelTip</title>
 </head>
+
 <body>
     <h1>TravelTip Starter</h1>
-      
+
     <section class="controls">
         <div class="main-controls">
-            <button onclick="onPanTo()"class="btn-pan">Go</button>
+            <button onclick="onPanTo()" class="btn-pan">Go</button>
             <button onclick="onGetUserPos()" class="btn-user-pos">Get User Position</button>
             <button onclick="onAddMarker()" class="btn-add-marker">Add Marker Speific Location</button>
         </div>
         <div class="secondary-controls">
             <p>You are at: <span class="user-pos"></span></p>
-                <button>Copy Location</button>  
+            <button>Copy Location</button>
         </div>
     </section>
     <div id="map" style="width: 100%; height: 400px;"></div>
     <section class="weather-container"></section>
     <button onclick="onGetLocs()" class="btn-get-locs">Get Locations</button>
-    
-    <p>Locations: 
-        <pre class="locs"></pre>
+
+    <p>Locations:
+    <pre class="locs"></pre>
     </p>
-    
+
 
     <script type="module" src="js/app.controller.js"></script>
 </body>
+
 </html>
